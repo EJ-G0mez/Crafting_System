@@ -108,7 +108,7 @@ Example:
 
   public Blueprint class extends ActorComponent Inventory_Component {
 
-    public Dictionary<Parent_Item, int> inventory; // This dictionary will allow the player to store any kind or item and know how many of said item are available.
+    public Dictionary<Item_Parent, int> inventory; // This dictionary will allow the player to store any kind or item and know how many of said item are available.
 
     .......
   }
@@ -119,7 +119,7 @@ Example:
 
   ### Functions
 
-  This section will show every function that this class has
+  This section will show every function that this class has.
 
   <ins>AddToInventory</ins>
 
@@ -139,5 +139,171 @@ Example:
   
   ```
 
-  
+  <ins>RemoveFromInventory</ins>
+
+  A simple function that removes a single item from the "inventory" Dictionary. It searches the Item_parent Map Key and reduces the count .1.
+
+  <img width="1192" height="374" alt="imagen" src="https://github.com/user-attachments/assets/7190fbdb-75ca-43c0-9f80-e466242e102c" /> [^7]
+
+  [^7]: RemoveFromInventory function in Unreal Engine 5
+
+  ```
+  public boolean RemoveFromInventory(Item_Parent itemToRemove, int quantity){
+    if(QueryInventory(self, itemToRemove, quantity).success){ //search if the item is in the inventory
+      inventory.add(itemToRemove, (QueryInventory(self, itemToRemove, quantity).outputQuantity - quantity)); //update the Map by removing the value of item quantity
+      return true;
+    }
+    return false;
+  }
+  ```
+
+<ins>QueryInventory</ins>
+
+A simple function that searches a specific item in the "inventory" Map/Dictionary. It searches for the spefied item and amount in the Map and removes it from the Dictionary.
+
+<img width="1197" height="373" alt="imagen" src="https://github.com/user-attachments/assets/7b2e71c9-907c-4f9b-a933-a9e04bdf05d3" /> [^8]
+
+[^8]: QueryInventory function in Unreal Engine 5
+
+```
+public boolean, int QueryInventory(Item_Parent item, int quantity){
+  boolean success = true; // we set a boolean to see if the item was found
+  int outputquantity; // we set a number to see how many of said number of items was found
+  if(inventory.find(item).value >= quantity AND inventory.find(item).success){ //if we found the item and it has a higher amount then the requested quantiry
+    return success, outputQuantkty = inventory.find(item).value; //return that the item an amoun do exist
+  }
+  return !success, outputQuantkty = inventory.find(item).value; //else return false and a value of -1
+}
+```
 </details>
+
+<details>
+
+<summary>Interact_Interface</summary>
+
+# Interact_Interface
+
+## An interface to interact with the world
+
+This is an interface with the purpose to have to functions that allows items to be interactables. A function that knows when an item is looked and a function that allows the item to be interacted with.
+
+<summary>Interface</summary>
+
+### Interface
+
+<img width="330" height="149" alt="imagen" src="https://github.com/user-attachments/assets/73d26258-cbfd-4335-a68f-d5b91babb51f" /> [^9]
+
+[^9]: Interact_Interface class diagram
+
+<img width="1131" height="582" alt="imagen" src="https://github.com/user-attachments/assets/cba4de42-f8e4-4530-a3f4-713dec8d483a" /> [^10]
+
+[^10]: Interact_Interface in Unreal Engine 5
+
+```
+
+public interface Interact_interface{
+
+  public lookAt(); //This will known when the object is being looked at
+
+  public InteractWith(); //This will allows the item to be interactablke
+
+}
+```
+
+</details>
+
+<details>
+
+<summary>Item_Categories</summary>
+
+# Item_Categories
+
+## Classifying item types
+
+This is an Enumerator that gives the option to give a specific category for an item.
+
+<summary>Enumerator</summary>
+
+### Enumerator
+
+<img width="289" height="134" alt="imagen" src="https://github.com/user-attachments/assets/9aa3e0a4-02f0-467d-a4f9-01698aba7cdd" /> [^11]
+
+[^11]: Item_Categories Enumeraot class diagram
+
+<img width="1912" height="407" alt="imagen" src="https://github.com/user-attachments/assets/a3841e6b-a90c-4592-86c4-bce19183eae3" /> [^12]
+
+[^12]: Item_Categories Enumerator in Unreal Engine 5
+
+```
+public enumerator Item_Categories {
+  Parts,
+  Plants,
+  Skins,
+  Medicinal,
+  Ammon,
+  Throwable,
+  Equipment
+}
+```
+
+</details>
+
+<details>
+
+<summary>Item_Parent</summary>
+
+# Item_Parent
+
+## The class for all items
+
+This actor blueprint class is a parent function to all items, it will have all basic parameters all items need, and Events that items will have.
+
+<img width="765" height="477" alt="imagen" src="https://github.com/user-attachments/assets/eae71c52-cd99-4153-b7e3-a78caa64b8aa" /> [^13]
+
+[^13]: Item_Parent class diagram
+
+<img width="1916" height="992" alt="imagen" src="https://github.com/user-attachments/assets/82de365e-3d2c-45d2-aa4a-e93988fde70b" /> [^14]
+
+[^14]: Item_Parent Viewport in unreal_Engine 5
+
+```
+#import Item_Categories
+#import Item_Parent
+#import BP_FirstPersonCharacter
+
+public class extends BlueprintActor implements Interact_Interface {
+  public text name;
+  public text description;
+  public Item_Categories category;
+  public Texture2D thumbnail;
+  public Dictionary<Item_Parent, int> craftingRecipe;
+
+  .........
+}
+```
+
+<summary>Event Graph</summary>
+
+### Event Graph
+
+<ins>InteractWith</ins>
+
+This is an event that tranforms the "InteractWithFunction" from the Interact Interface to an Event. It will allow the player to interact with an item, to add them to their inventory, and removes them from the level.
+
+<img width="1682" height="295" alt="imagen" src="https://github.com/user-attachments/assets/93ec4a31-9378-4f82-bd8f-66ddb085d862" /> [^15]
+
+[^15]: InteractWith Event in Unreal Engine 5
+
+```
+public eventr InteractWith(BP_FirstPersonCharacter playerCharacter){
+  playerCharacter.Inventory_Component.AddToinventory(self.GetClass(), 1); // we add the item to the inventory
+  try {
+    My_Player_Controller cast = (My_Player_Controller) GetPlayerController(0); //then we attempt to cast the player controller into  aMy_Player_Controller class
+    cast.Headup_Display.Crafting_Menu_W.RefreshInventory(); //then we update the UI to show this item in the inventory
+    DestroyActor(self); // We destroy the item itself and remove from the level
+  }
+}
+```
+</details>
+
+
