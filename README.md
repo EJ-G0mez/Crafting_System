@@ -268,10 +268,9 @@ This actor blueprint class is a parent function to all items, it will have all b
 
 ```
 #import Item_Categories
-#import Item_Parent
 #import BP_FirstPersonCharacter
 
-public class extends BlueprintActor implements Interact_Interface {
+public BluePrintActor class  Item_Parent extends BlueprintActor implements Interact_Interface {
   public text name;
   public text description;
   public Item_Categories category;
@@ -306,4 +305,149 @@ public eventr InteractWith(BP_FirstPersonCharacter playerCharacter){
 ```
 </details>
 
+<details>
 
+<summary>Item_Green_Leaf</summary>
+
+# Item_Green_Leaf
+
+## A basic crafting item
+
+This is an Actor the inherits all featuers from the Item_Parent class. It is used for testing purposes.
+
+<img width="268" height="251" alt="imagen" src="https://github.com/user-attachments/assets/b41dd6c8-ba30-48f3-b908-096eff9510a9" /> [^16]
+
+[^16]: Item_Green_Leaf class diagram
+
+<img width="1914" height="1008" alt="imagen" src="https://github.com/user-attachments/assets/989f0385-8bf9-4a54-9f7c-9e05f4813f35" /> [^17]
+
+[^17]: Item_Green_Leaf Actor values in Unreal Engine 5
+
+```
+#import Item_Categories
+#import BP_FirstPersonCharacter
+
+public BluePrintActor class  Item_Green_Leaf extends Item_Parent  {
+  super.name = "Green Leaf";
+  super.description = "These Green Herbs are filled with healthy protein. They are used by the locals for medicine.";
+  super.category = Item_Categories.Plants;
+  super.thumbnail = "T_Bush_D";
+  super.craftable = false;
+  super.craftingRecipe = null;
+  .........
+}
+```
+
+</details>
+
+<details>
+
+<summary>Item_Green_Leaf</summary>
+
+# Item_Healing_Flask
+
+## A basic crafted item
+
+This is an Actor the inherits all featuers from the Item_Parent class. It is used for testing purposes.
+
+<img width="270" height="268" alt="imagen" src="https://github.com/user-attachments/assets/4f74fdcd-223a-4c89-90c6-3e55ce658fdb" /> [^18]
+
+[^18]: Item_Healing_Flask class diagram
+
+<img width="1915" height="1034" alt="imagen" src="https://github.com/user-attachments/assets/25f8844d-1aed-49b7-a2a6-db78ba0f0065" /> [^19]
+
+[^19]: Item_Healing Flask Actor values in Unreal Engine 5
+
+```
+#import Item_Categories
+#import BP_FirstPersonCharacter
+
+public BluePrintActor class  Item_Healing_Flask extends Item_Parent  {
+  super.name = "Healing Flask";
+  super.description = "Can heal the drinker by a considerable amount, wanring: side-effects included";
+  super.category = Item_Categories.Medicinal;
+  super.thumbnail = "T_Tech_Dot_M";
+  super.craftable = true;
+  super.craftingRecipe = {Item_Green_Leaf: 3}
+  .........
+}
+```
+
+</details>
+
+<details>
+
+<summary>Crafting_Menu_W</summary>
+
+# Crafting_Menu_W
+
+## How we see our crafting menu.
+
+This is a Widget Blueprint Object that gives our UI to the player. This UI has all the item categories, and will show all available items, and available craftable items.
+
+<img width="769" height="649" alt="imagen" src="https://github.com/user-attachments/assets/7196f0b4-87e5-4dff-96b7-13ac73b28527" /> [^20]
+
+[^20]: Crafting_Menu_W class diagram
+
+<img width="1422" height="1003" alt="imagen" src="https://github.com/user-attachments/assets/bf807729-21cf-443a-a531-c23a69288f88" /> [^21]
+
+[^21]: Crafting_Menu_W Desginer view in Unreal Engine 5
+
+```
+#import Inventory_Category_W
+#import BP_FirstPersonCharacter
+#import Inventory_Slot_W
+#import Item_Parent
+
+public BlueprintWidget class Crafting_Menu_W extends UserWidget {
+  public Inventory_Category_W Ammo;
+  public Inventory_Category_W Equipment;
+  public Inventory_Category_W Medicinal;
+  public Inventory_Category_W Parts;
+  public Inventory_Category_W Skins;
+  public Inventory_Category_W Throwables;
+  public Inventory_Slot_W hoveredItem;
+  public BP_FirstPersonCharacter playerCharacter;
+
+
+...................
+}
+```
+
+<summary>Event Graph</summary>
+
+### Event Graph
+
+<ins>Construct</ins>
+
+This is an event that triggers when the item is created. It sets the playerCharacter variable value.
+
+<img width="853" height="316" alt="imagen" src="https://github.com/user-attachments/assets/14eb641f-bfc1-4504-9ec7-de08f074bf0b" /> [^22]
+
+[^22]: Contruct event in Unreal Engine 5
+
+```
+public event Contrcut() {
+  playerCharacter = (BP_FirstPersonCharacter) GetPlayerCharaccter();
+}
+```
+
+<ins>RefreshInventory</ins>
+
+This event is called when there is a change in the inveotry of the player. It will refresh the UI to show changes.
+
+<img width="940" height="465" alt="imagen" src="https://github.com/user-attachments/assets/fd3016b6-82e9-41a4-a0d1-484ff86c0fde" /> [^23]
+
+[^23]: RefreshInventory event in Unreal Engine 5
+
+```
+public event RefreshInventory(){
+  Inventory_Category_W array[] = [Ammo, Equipment, Medicinal, Parts, Plants, Skins, Throwables]; // an array that makes sure that all categories are refreshed
+  for each x in array {
+    OnRefresh(x); // Refresh the inventory
+  }
+}
+```
+
+
+</details>
