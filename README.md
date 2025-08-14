@@ -449,5 +449,65 @@ public event RefreshInventory(){
 }
 ```
 
+<ins>Craft_Item</ins>
+
+This Event triggers when an item is crafted. It gets all used items, the crafted item, the crafting recipe and adds and removes the items correspondingly.
+
+<img width="1565" height="275" alt="imagen" src="https://github.com/user-attachments/assets/b3c349c4-b182-40b9-83dd-5a8bb5ff6908" /> [^24]
+
+[^24]: Craft_Item Event in unreal Engine 5.
+
+```
+public event Craft_Item(){
+  if(hoveredItem.isValid){ //check if there is a hovered item
+    if(hoveredItem.item.craftable){ //check if the item craftable
+      if(checkCraftRecipe(hoveredItem.item.craftingRecipe).validRecipe){ //check if the recipe is available to be crafted
+        AddToInventory(playerCharacter.Inventory_Component, hoeveredItem.item); //add to inventory crafted item
+        removeCraftedIngredient(hoveredItem.item.craftingRecipe); //remove crafting materials
+        RefreshInventory();
+      }
+    }
+  }
+}
+```
+<summary>Functions</summary>
+
+### Functions
+
+<ins>checkCraftRecipe</ins>
+
+A function that checks if the player has all the item for the selected recipe. It searches the recipe and checks if the player has all required items.
+
+<img width="1417" height="449" alt="imagen" src="https://github.com/user-attachments/assets/c9cc006b-7804-4210-94c9-4c4e40bca1c8" /> [^25]
+
+[^25]: checkCraftRecipe function in Unreal Engine 5
+
+```
+public boolean checkCraftRecipe(Dictionary<Item_Parent, int> recipe){
+boolean isComplete = true;
+  for each item in recipe.keys() { //check all the item map keys
+    if(!QueryInventory(playerCharacter.Inventory_Component, item, recipe.find(item)).success){  //check if the item amount required is not found
+      isComplete = false;
+    }
+  }
+return isComplete;
+}
+```
+
+<ins>removeCraftedIngredients</ins>
+
+A function that removes all used items in a crafting recipe. It finds the in the inventory and removes them from itself.
+
+<img width="1231" height="363" alt="imagen" src="https://github.com/user-attachments/assets/485f7620-7c7d-4036-95ba-be363bee471d" /> [^26]
+
+[^26]: removeCraftedIngredients function in Unreal Engine 5
+
+```
+public removeCraftedIngredient(Dictionary<Item_Parent, int> ingredients){
+  for each items in ingredients.keys(){
+    RemoveFromInventory(playerCharacter.Inventory_Component, item, ingredients.find(item));
+  }
+}
+```
 
 </details>
