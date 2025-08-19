@@ -511,3 +511,175 @@ public removeCraftedIngredient(Dictionary<Item_Parent, int> ingredients){
 ```
 
 </details>
+
+<details>
+
+<summary>Inventory_Category_W</summary>
+
+# Inventory_Category_W
+
+## Lets divide our inventory in the UI
+
+This is a Widget Blueprint class that divides the inventory into categories. THey make sure the inventory is organized.
+
+<img width="812" height="659" alt="imagen" src="https://github.com/user-attachments/assets/9435a51e-4236-4e47-9858-9d824aadfe23" /> [^27]
+
+[^27]: Inventory_Category_W class diagram
+
+<img width="1426" height="1008" alt="imagen" src="https://github.com/user-attachments/assets/80225dc7-ac8c-490d-bf50-adbb5fdbd925" /> [^28]
+
+[^28]: Inventory_Category_W Designer view in Unreal Engine 5
+
+```
+#import Item_Categories
+#import BP_FirstPersonCharacter
+#import Item_Parent
+
+public BlueprintWidget class Inventory_Category extends UserWidget {
+  public WrapBox BOX_Category_Container;
+  public TextBox TXT_Category_Title;
+  public BP_FirstPersonCharacter playerCharacter;
+  public boolean isCraftedCatgory;
+  public Item_Parent[] craftedItems;
+
+..........
+}
+```
+
+<summary>Event Graph</summary>
+
+### Event Graph
+
+<ins>PreConstruct</ins>
+
+The event that is active before the actor is constructed. It helps to add the slots to a specific category and adds any item that can be crafted.
+
+<img width="1810" height="436" alt="imagen" src="https://github.com/user-attachments/assets/7b4d35db-b674-4033-b9e2-1f97ab7f2a84" /> [^29]
+
+[^29]: PreConstruct Event in Unreal Engine 5
+
+```
+public event PreConstruct(){
+  TXT_Category_Title.setText((Text) category.toString()); //set the category title bby casting the enum to a text
+  playerCharacter = (BP_FirstPersonCharacter) GetPlayerCharacter(0);
+  if(isCraftedCategory){
+    for each item in craftedItems {
+      AddChildToWrapBox(CreateWidget("Inventory_Slot_W", item, playerCharacter)); //Add the slots in the catgory if they are a craftable
+    }
+  } else {
+    for each item in playerCharacter.Inventory_Component.inventory {
+      if(item.category == category){
+        AddChildToWrapBox(CreateWidget("Inventory_Slot_W", item, playerCharacter)); // Adds the players current inventory slots to the category
+      }
+    }
+  }
+}
+```
+
+<ins>OnRefresh</ins>
+
+This event is active when there is a change on the inventory, it refreshes the slots of the categories by clearing and adding the WarpBox of the category
+
+<img width="1566" height="785" alt="imagen" src="https://github.com/user-attachments/assets/992818a3-b26f-4ac7-8b24-21acb100b768" /> [^30]
+
+[^30]: OnRefresh event in Unreal Engine 5
+
+```
+public event OnRefresh(){
+  BOX_Category_Container.ClearChildren();
+  if(isCraftedCategory){
+    for each item in craftedItems {
+      AddChildToWrapBox(CreateWidget("Inventory_Slot_W", item, playerCharacter)); //Add the slots in the catgory if they are a craftable
+    }
+  } else {
+    for each item in playerCharacter.Inventory_Component.inventory {
+      if(item.category == category){
+        AddChildToWrapBox(CreateWidget("Inventory_Slot_W", item, playerCharacter)); // Adds the players current inventory slots to the category
+      }
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+
+<summary>Inventory_Slot_W</summary>
+
+# Inventory_Slot_W
+
+## Viewing a singular item
+
+This is a Widget Blueprint class that show an individual slot of an item. 
+
+<img width="802" height="622" alt="imagen" src="https://github.com/user-attachments/assets/4fe55b6e-ebd6-4afd-9d77-6be833a35cf8" /> [^31]
+
+[^31]: Inventory_Slot_W class diagram.
+
+<img width="1422" height="1005" alt="imagen" src="https://github.com/user-attachments/assets/c5e9842d-686e-4cf4-990d-36da71171f08" /> [^32]
+
+[^32]: Inventory_Slot_W Designer View in Unreal Engine 5
+
+```
+#import Item_Parent
+#import BP_FirstPersonCharacter
+#import Crafting_Menu_W
+
+public WidgetBluerpint class Inventory_Slot_W extends UserWidget {
+  public Image IMG_Item_Thumbnail
+  public TextBox TXT_Quantity_Text;
+  public Item_Parent item;
+  public BP_FirstPersonCharacter playerCharacter;
+  public Crafting_Menu_W crafting_Menu;
+
+........... 
+}
+```
+
+<summary>Event Graph</summary>
+
+### Event Graph
+
+<ins>PreConstruct</ins>
+
+An event that occurs prior to when the object is created, it will set the slot to show the item thimbnail and show the exact amount.
+
+<img width="1872" height="423" alt="imagen" src="https://github.com/user-attachments/assets/a43fbade-3590-4f7a-89c8-b7f4632dd85b" /> [^33]
+
+[^33]: PreConstruct in unreal Engine 5
+
+```
+  public event PreConstruct(){
+    IMG_Item_Thumbnail.SetBrushFromTexture(item.thumbnail); //set the thumbnail of the slot
+    TXT_Quantity_Text-setText(playerCharacter.Invenotry_Component.inventory.find(item).toText()); //set the amount of the item from the amount in the players inventory
+    if(playerCharacter.Invenotry_Component.inventory.find(item) > 0){ //If there are more than one item
+      crafting_Menu = ((My_Player_Character) GetPlayerController(0)).Headup_Display.Crafting_Menu_W; //set the crafting menu to that of the players
+    } else { //else reduce the opacity of the text and then set the crafting menu
+      TXT_Quantity_Item.SetOpacity(0.4);
+      crafting_Menu = ((My_Player_Character) GetPlayerController(0)).Headup_Display.Crafting_Menu_W; //set the crafting menu to that of the players
+    }
+  }
+```
+
+<ins>Tick</ins>
+
+This Event is triggered on every tick, it is a check to see if an item is being hovered above with the mouse.
+
+<img width="1507" height="606" alt="imagen" src="https://github.com/user-attachments/assets/7c40f931-218c-48c5-9869-942efb0ddf86" /> [^34]
+
+[^34]: Tick event in Unreal Engine 5
+
+```
+public event Tick(){
+  if(isHovered()){
+    crafting_Menu.hoveredItem = self;
+  } else {
+    if(crafting_Menu.hoveredItem == self){
+      crafting_Menu.hoveredItem = null;
+    }
+  }
+}
+```
+
+</details>
