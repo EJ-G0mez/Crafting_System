@@ -1,0 +1,28 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/Item_Parent.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/Item_Categories.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/Item_Green_Leaf.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/Inventory_Component.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/FirstPerson/Blueprints/BP_FirstPersonCharacter.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/__ExternalActors__/FirstPerson/Maps/FirstPersonMap/B/EQ/MFLV3LAZSSWIOU7LGZOL2P.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/Interact_Interface.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/FirstPerson/Blueprints/My_Player_Controller.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/FirstPerson/Blueprints/BP_FirstPersonGameMode.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/FirstPerson/Blueprints/Headup_Display.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/UI/Crafting_Menu_W.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/UI/Inventory_Slot_W.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/UI/Inventory_Catergory_W.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/__ExternalActors__/FirstPerson/Maps/FirstPersonMap/E/T9/ZZXSBYN6JSU0RZBK0Z2ZR0.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/__ExternalActors__/FirstPerson/Maps/FirstPersonMap/A/UX/79H93BMH5W6YRK9BDBH41K.uasset",
+				"C:/Users/emigo/OneDrive/Documentos/Unreal Projects/Crafting_System/Content/Crafting/Item_Healing_Flask.uasset"
+			]
+		}
+	]
+}
