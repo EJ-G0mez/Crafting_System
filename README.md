@@ -683,3 +683,220 @@ public event Tick(){
 ```
 
 </details>
+
+<details>
+
+<summary>BP_FirstPersonCharacter </summary>
+
+# BP_FirstPersonCharacter
+
+## The default first person character blueprint
+
+This is the default First PErson Character Blueprint in the First Person Project in Unreal Engine 5. It was modified to have an inventory component and to check and interact with items.
+
+<img width="528" height="287" alt="imagen" src="https://github.com/user-attachments/assets/7555ffee-06ce-4106-ac6a-f80d8622510c" /> [^35]
+
+[^35]: BP_FirstPersonCharacter class diagram
+
+```
+#import Inventory_Component
+
+public Blueprint class BP_FirstPersonCharacter extends Character {
+  public Inventory_Component Inventory_Component
+  public Actor lookAtTarget;
+
+.......
+}
+
+```
+
+<summary>Event Graph</summary>
+
+### Event Graph
+
+<ins>Tick</ins>
+
+This event is triggered with every tick, it does a check to see if an item is being looked at.
+
+<img width="521" height="204" alt="imagen" src="https://github.com/user-attachments/assets/7cd6a157-fa3e-4df7-a38e-d9242251be9f" /> [^36]
+
+[^36]: Tick event in Unreal engine 5
+
+```
+public event Tick(){
+  CheckLookAt(self);
+}
+```
+
+<ins>InputAction_Interact</ins>
+
+This event checks if the "E" key is pressed.
+
+<img width="597" height="392" alt="imagen" src="https://github.com/user-attachments/assets/1bd14978-7aae-44b5-b035-85f8d34cd975" /> [^37]
+
+[^37]: InputAction_Interact event in Unreal Engine 5.
+
+```
+public event InputAction_Interact(){
+  lookAtTarget.InteractWith(self);
+}
+```
+
+<summary>Functions</summary>
+
+### Functions
+
+<ins>CheckLookAt</ins>
+
+This function calls the look at of the actor to see if the plkayer is looking at an item, it calculates the camera's position and sets the value of the looked at actor.
+
+<img width="1670" height="432" alt="imagen" src="https://github.com/user-attachments/assets/52f661ae-f178-4d81-b20c-7cd6f8482bbd" /> [^38]
+
+[^38]: CheckLookAt function in Unreal Engine 5
+
+```
+public CheckLookAt(){
+  vector3 start = this.FirtPersonCamera.GetWorldLocation();
+  vector3 end = GetForwardVector(this.FirtPersonCamera.GetWorldRotation()) * 300.0 + start;
+  if(LineTraceByChannel(start, end, "interactive", /*Ingenor self*/ true).OutHitBlockingHit){ // Check if there is an item
+    lookAtTarget = LineTraceByChannel(start, end, "interactive", /*Ingenor self*/ true).OutHitActor; // set the item hit
+    lookAtTarget.LookAt(self);
+  } else [
+    lookAtTarget = null;
+  ]
+}
+```
+</details>
+
+<details>
+
+<summary>Headup_Display</summary>
+
+# Headup_Display
+
+## The main UI for the HUD
+
+This widget Blueprint class is meant to keep all other widgets contained within. I has the crafting menu as a main widget.
+
+<img width="519" height="273" alt="imagen" src="https://github.com/user-attachments/assets/09cd2551-eaa7-4b01-987f-974d22951700" /> [^39]
+
+[^38]: Headup_Display class diagram
+
+<img width="1425" height="1004" alt="imagen" src="https://github.com/user-attachments/assets/7182be33-2f14-4d55-a618-2fc8d54cc71b" /> [^39]
+
+[^39]: Headup_Display desginer view in UNreal Engine 5
+
+```
+#import Crafting_Menu_W
+
+public BlueprinWidget class Headup_Display extends UserWidget {
+  public Crafting_Menu_W Crafting_Menu_W;
+  public Canvas HUD_Canvas;
+
+....................
+}
+```
+
+<summary>Event Graph</summary>
+
+### Event Graph
+
+<ins>ToggleCraftingMenu</ins>
+
+This event is triggered when the Crafting menu is opened. It checks if its already open and makes it visible or not depending on the visibiolity.
+
+<img width="1683" height="675" alt="imagen" src="https://github.com/user-attachments/assets/2803f13c-c075-42b2-8df5-daf98bb148cf" /> [^40]
+
+[^40]: ToggleCraftingMenu in Unreal Engine 5
+
+```
+public event ToggleCraftingMenu(){
+  if(Crafting_Menu_W.isVisible()){
+    Crafting_Menu_W.SetVisibility("hidden");
+    SetInputModeGameOnly(GetPlayerController(0), false);
+    GetPLayerController(0).showMouseCursor = false;
+    GetPlayerCharacter(0).EnableInput(GetPlayerController(0));
+  } else {
+    Crafting_Menu_W.SetVisibility("visible");
+    SetInputModeGameAndUI(GetPlayerController(0), Crafting_Menu_W, "Do Not Look", true, false);
+    GetPlayerController(0).showMouseCursor = true;
+    GetPlayerCharacter(0).DisableInput(GetPlayerController(0));
+  }
+}
+```
+
+</details>
+
+<details>
+
+<summary>My_Player_Controller</summary>
+
+# My_Player_Controller
+
+## A player controller for the character
+
+This is PlayeController class that is meant to be added for the player to have access to certain controls. Like opening the inventory and interacting with items.
+
+<img width="470" height="308" alt="imagen" src="https://github.com/user-attachments/assets/933245d4-b5d2-45f7-b712-c32836bc9067" /> [^41]
+
+[41]: My_Player_Controller class function
+
+```
+#import Haedup_Display
+
+public PlayerController class My_Player_Controller extends PlayerController {
+  public Haedup_Display haedupDisplay;
+
+
+.............
+}
+```
+
+<summary>Event Graph</summary>
+
+### Event Graph
+
+<ins>BeginPlay</ins>
+
+This event occurs when the project is started, it generates the HUD and adds it to the viewport.
+
+<img width="1082" height="245" alt="imagen" src="https://github.com/user-attachments/assets/49196b23-7088-4063-ae24-5a0ef0c2c335" /> [^42]
+
+[^42]: BeginPlay Event in Unreal Engine 5
+
+```
+public event BeginPlay(){
+  headupDisplay = CreateWidget("Headup_Display");
+  AddToViewport(headupDisplay);
+}
+```
+
+<ins>ToggleCrafting</ins>
+
+This event is triggered when pressing "tab". It opens the crafting menu.
+
+<img width="592" height="354" alt="imagen" src="https://github.com/user-attachments/assets/e725cfc7-dd06-4567-882f-0654ee008a7b" /> [^43]
+
+[^43]: ToggleCrafting event in Unreal Engine 5
+
+```
+  public event ToggleCrafting(){
+    headupDisplay.ToggleCraftingMenu();
+  }
+```
+
+<ins>Interact</ins>
+
+This event is trigerred when pressing "e" in the cratfing menu. It crafts an item.
+
+<img width="777" height="387" alt="imagen" src="https://github.com/user-attachments/assets/b7e0270b-9d6d-4701-99e3-8a8e0a0ebfed" /> [^44]
+
+[^44]: Interact event in Unreal Engine 5
+
+```
+publice event Interact(){
+  headupDiplay.Crafting_Menu_W.CraftItem():
+}
+```
+
+</details>
