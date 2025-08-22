@@ -9,6 +9,8 @@ This project is meant to be a *learning and practical* execution of a crafting s
   3. A crafting system that allows items to be created as long as the necessary components are acquired
   4. Basic items with their own categories that are separated in the inventory system UI
 
+This project can be viewed functioning in the following demo reel here: https://youtu.be/npkyZY1SgLA
+
 This README document is meant to record all of the features this code has, giving a thrurough explanation with the use of Diagrams, Images, and PseudoCode meant to resemble the Unreal Engine 5 block structure.
 
 # Content
